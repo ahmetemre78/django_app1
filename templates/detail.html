@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="row">
+      <div class="col-md-12 offset-md-2">  
+      <!-- Post Content Column -->
+      <div class="col-lg-8">
+
+        <!-- Title -->
+        <h2 class="mt-4">{{article.baslik}}</h2>
+
+        <!-- Author -->
+        <p class="lead">
+          by
+          <a href="/makaleler/kontrolpaneli">{{article.yazar.username}}</a>
+        </p>
+
+        <hr>
+
+        <!-- Date/Time -->
+        <p>Yayınlanma Tarihi : {{article.olusturulma_tarihi}}</p>
+
+        <!-- Preview Image -->
+        {% if article.resim %}
+          <img class="img-fluid rounded" src="{{article.resim.url}}" alt="">
+        {% endif %}
+
+        <!-- Post Content -->
+        <p class="lead">{{article.icerik|safe}}</p>
+
+        <hr>
+
+        <h4>Yorumlar</h4>
+        <br>
+        {% if comments %}
+        {% for yorumlar in comments  %}
+          <div class="media mb-4">
+          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+          <div class="media-body">
+            <h5 class="mt-0">{{yorumlar.yorum_yazar}}</h5>
+            {{yorumlar.yorum_icerik}}<br> 
+            {{yorumlar.yorum_tarihi}}
+            
+          </div>
+        </div>
+        {% endfor %}
+            
+
+        {% else %}
+          <div class = "alert alert-danger"><b>Bu makaleye ilk yorum yapan siz olun!</b></div>
+        {% endif %}
+
+        
+        <div class="card my-4">
+            <h5 class="card-header">Yorum Yap</h5>
+            <div class="card-body">
+              <form method = "POST" action = "{% url 'makale:comment' article.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="exampleInputEmail1">İsim</label>
+                  <input name = "yorum_yazar" type="text" class="form-control" placeholder="">
+                  <small id="emailHelp" class="form-text text-muted">*Zorunlu Alan</small>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Yorum</label>
+                  <textarea name = "yorum_icerik" class = "form-control" rows="3"></textarea>
+                  <small class="form-text text-muted">*Zorunlu Alan</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Yorum Ekle</button>
+              </form>
+            </div>
+        </div>
+      </div>
+            
+      </div>
+    </div>
+{% endblock content %}

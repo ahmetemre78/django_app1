@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class = "row">
+    <div class="col-md-12 offset-md-2">    
+        <div class="col-lg-8">
+            <h2>Makaleler</h2>
+            <hr>
+        </div>
+    </div>
+    
+</div>
+<div class = "row">
+    <div class="col-md-12 offset-md-2">    
+        <div class="col-lg-8">
+             <form>
+                {% csrf_token %}
+                <input type="text" name="search" placeholder="Ara">
+                <button type="submit" class="btn btn-primary">Ara</button>
+            </form>
+        </div>
+    </div>
+</div>
+       
+{% if articles %}
+    {% for article in articles  %}
+        <div class="row">
+          <div class="col-md-12 offset-md-2">    
+            <!-- Post Content Column -->
+            <div class="col-lg-8">
+
+                <!-- Title -->
+                <h3 class="mt-4"><a href = "{% url 'makale:detail' article.id %}">{{article.baslik}}</a></h3>
+
+                <!-- Author -->
+                <p class="lead">
+                by
+                <a href="{% url 'makale:dashboard'%}">{{article.yazar.username}}</a>
+                </p>
+
+                <hr>
+
+                <!-- Date/Time -->
+                <p>Yayınlanma Tarihi : {{article.olusturulma_tarihi}}</p>
+
+                <!-- Preview Image -->
+                {% if article.resim %}
+                <img class="img-fluid rounded" src="{{article.resim.url}}" alt="">
+                {% endif %}
+
+                <!-- Post Content -->
+                <p class="lead">{{article.icerik|safe|truncatewords:50}}</p>
+                <a style="float:right;" href = "{% url 'makale:detail' article.id %}" class = "btn btn-primary">Devamını Oku...</a>
+                <br><br>
+                <hr>
+             </div> 
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+<div class = "alert alert-danger">Makale Bulunamadı</div>
+{% endif %}
+
+{% endblock content %}
